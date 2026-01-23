@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TACM.UI.Pages.FinalTestMessagePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TACM.UI.Pages"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
+    Padding="{StaticResource ContentPagePadding}"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundImageSource="{StaticResource BackgroundImage}">
+
+    <Border
+        Margin="0"
+        Padding="0"
+        BackgroundColor="{StaticResource DefaultTransparentBackGround}"
+        Stroke="{StaticResource DefaultBorderColor}"
+        StrokeShape="RoundRectangle 20,20">
+
+        <StackLayout
+            Padding="10"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand"
+            ZIndex="0">
+
+            <Label
+                Margin="20"
+                FontSize="Title"
+                Text="Test done"
+                TextColor="White" />
+
+            <Line
+                HeightRequest="25"
+                HorizontalOptions="Fill"
+                Stroke="White"
+                StrokeThickness="2"
+                X1="0"
+                X2="1500" />
+
+            <Grid
+                ColumnDefinitions="*"
+                RowDefinitions="300, 100, *"
+                RowSpacing="10"
+                VerticalOptions="FillAndExpand">
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="60,30,60,60"
+                    Padding="30"
+                    BackgroundColor="{StaticResource MainPageButtonsBackground}"
+                    HorizontalOptions="FillAndExpand"
+                    Stroke="White"
+                    StrokeShape="RoundRectangle 20,20"
+                    VerticalOptions="Center">
+
+                    <Label
+                        FontSize="25"
+                        HorizontalOptions="Fill"
+                        HorizontalTextAlignment="Center"
+                        VerticalOptions="End">
+
+                        <Label.FormattedText>
+                            <FormattedString x:Name="LabelMessage">
+                                <Span x:Name="sp_text" Text="The test is done. You can exit the page now." TextColor="White" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Border>
+
+                <!--<Button
+                    x:Name="BtnBackToHome"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource DefaultButtonBackground}"
+                    Clicked="BtnBackToHome_Clicked"
+                    ContentLayout="Right,25"
+                    HeightRequest="50"
+                    ImageSource="{StaticResource DefaultButtonIconImage}"
+                    Text="Back to Home"
+                    WidthRequest="200" />-->
+
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="11"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    Text="{StaticResource FooterMessage}"
+                    TextColor="White"
+                    VerticalOptions="End" />
+            </Grid>
+        </StackLayout>
+    </Border>
+</ContentPage>

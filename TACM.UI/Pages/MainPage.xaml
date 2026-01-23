@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TACM.UI.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TACM.UI.Pages"
+    Padding="{StaticResource ContentPagePadding}"
+    BackgroundImageSource="{StaticResource BackgroundImage}">
+
+    <Border
+        Padding="0"
+        BackgroundColor="{StaticResource DefaultTransparentBackGround}"
+        Stroke="{StaticResource DefaultBorderColor}"
+        StrokeShape="RoundRectangle 20,20">
+
+        <StackLayout
+            Padding="10"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand"
+            ZIndex="0">
+
+            <Label
+                Margin="20"
+                FontSize="Title"
+                 Text="{Binding Title}"
+                TextColor="White" />
+
+            <Line
+                HeightRequest="25"
+                HorizontalOptions="Fill"
+                Stroke="White"
+                StrokeThickness="2"
+                X1="0"
+                X2="1500" />
+
+            <StackLayout
+                Margin="0,35,0,0"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal">
+
+                <FlexLayout
+                    Padding="5,5,5,5"
+                    AlignContent="Center"
+                    AlignItems="Center"
+                    HeightRequest="80"
+                    HorizontalOptions="CenterAndExpand"
+                    JustifyContent="Center"
+                    VerticalOptions="Start"
+                    ZIndex="1">
+
+                    <Editor
+                        Margin="10"
+                        BackgroundColor="White"
+                        IsEnabled="{Binding SessionNotStartedYet}"
+                        Opacity="1"
+                        Placeholder="Subject ID"
+                        PlaceholderColor="Black"
+                        Text="{Binding Session.SubjectID}"
+                        TextColor="Black"
+                        WidthRequest="300" />
+
+                    <Editor
+                        Margin="10"
+                        BackgroundColor="White"
+                        IsEnabled="{Binding SessionNotStartedYet}"
+                        Opacity="1"
+                        Placeholder="Age"
+                        PlaceholderColor="Black"
+                        Text="{Binding Session.Age}"
+                        TextColor="Black"
+                        WidthRequest="300" />
+
+                    <Picker
+                        Margin="10"
+                        BackgroundColor="White"
+                        HeightRequest="50"
+                        IsEnabled="{Binding SessionNotStartedYet}"
+                        Opacity="1"
+                        SelectedItem="{Binding Session.Sex}"
+                        WidthRequest="300">
+                        <Picker.Items>
+                            <x:String>Sex</x:String>
+                            <x:String>Male</x:String>
+                            <x:String>Female</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </FlexLayout>
+            </StackLayout>
+
+            <StackLayout
+                Margin="5,15,5,5"
+                HorizontalOptions="CenterAndExpand"
+                Orientation="Horizontal">
+                <HorizontalStackLayout Spacing="20">
+                    <Button
+                    x:Name="btnStartSession"
+                    BackgroundColor="{StaticResource DefaultButtonBackground}"
+                    Command="{Binding StartSessionCommand}"
+                    ContentLayout="Right,25"
+                    ImageSource="{StaticResource DefaultButtonIconImage}"
+                    IsEnabled="{Binding SessionNotStartedYet}"
+                    Text="Start Session"
+                    WidthRequest="200" />
+                    <Button
+                     x:Name="btnExit"
+                     BackgroundColor="{StaticResource DefaultButtonBackground}"
+                     Clicked="BtnExitClicked"
+                     ContentLayout="Right,25"
+                     ImageSource="{StaticResource DefaultButtonIconImage}"
+                     IsEnabled="True"
+                     Text="Exit"
+                     WidthRequest="200" />
+                </HorizontalStackLayout>
+
+            </StackLayout>
+
+            <Border
+                Margin="100,100,100,70"
+                Padding="20"
+                BackgroundColor="{StaticResource MainPageButtonsBackground}"
+                HorizontalOptions="FillAndExpand"
+                Stroke="White"
+                StrokeShape="RoundRectangle 20,20"
+                VerticalOptions="EndAndExpand">
+
+                <Grid
+                    ColumnDefinitions="Auto, Auto, Auto"
+                    ColumnSpacing="50"
+                    HorizontalOptions="CenterAndExpand"
+                    RowDefinitions="50,50"
+                    RowSpacing="20">
+
+                    <Button
+                        x:Name="btnVerbalMemory"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnVerbalMemoryClicked"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Text="Verbal Memory"
+                        WidthRequest="200" />
+
+                    <Button
+                        x:Name="btnNonVerbalMemory"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnNonVerbalMemoryClicked"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Text="Non-Verbal Memory"
+                        WidthRequest="200" />
+
+                    <Button
+                        x:Name="btnAttentionDemo"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnAttentionDemo_Clicked"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Text="Attention Demo"
+                        WidthRequest="200" />
+
+                    <Button
+                        x:Name="btnAttention"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Clicked="BtnAttention_Clicked"
+                        Text="Attention"
+                        WidthRequest="200" />
+
+                    <Button
+                        x:Name="btnReport"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnReportClicked"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Text="Report"
+                        WidthRequest="200" />
+
+                    <Button
+                        x:Name="btnSettings"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnSettingsClicked"
+                        ContentLayout="Right,15"
+                        HorizontalOptions="Center"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        IsEnabled="{Binding SessionStarted}"
+                        Text="Settings"
+                        WidthRequest="200" />
+                               
+                </Grid>
+            </Border>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="11"
+                HorizontalOptions="Fill"
+                HorizontalTextAlignment="Center"
+                Text="{StaticResource FooterMessage}"
+                TextColor="White"
+                VerticalOptions="End" />
+        </StackLayout>
+    </Border>
+</ContentPage>

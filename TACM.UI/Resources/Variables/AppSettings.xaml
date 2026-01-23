@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    x:Class="TACM.UI.Resources.Variables.AppSettings"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <x:String x:Key="BackgroundImage">background.jpeg</x:String>
+    <x:String x:Key="FooterMessage"></x:String>
+    <x:Int32 x:Key="ContentPagePadding">50</x:Int32>
+    <x:String x:Key="DefaultButtonIconImage">startsession.png</x:String>
+</ResourceDictionary>

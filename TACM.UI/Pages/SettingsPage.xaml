@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TACM.UI.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Padding="{StaticResource ContentPagePadding}"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundImageSource="{StaticResource BackgroundImage}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Fix for macOS: Entry text should be black on white background -->
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Border
+        Margin="0"
+        Padding="0"
+        BackgroundColor="{StaticResource DefaultTransparentBackGround}"
+        Stroke="{StaticResource DefaultBorderColor}"
+        StrokeShape="RoundRectangle 20,20">
+
+        <StackLayout
+            Padding="10"
+            HorizontalOptions="Center"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand"
+            ZIndex="0">
+
+            <Label
+                Margin="20"
+                FontSize="Subtitle"
+                Text="Attention Settings"
+                TextColor="White" />
+
+            <Line
+                HeightRequest="25"
+                HorizontalOptions="Fill"
+                Stroke="White"
+                StrokeThickness="2"
+                X1="0"
+                X2="1500" />
+
+            <Grid
+                Padding="0,15,0,0"
+                ColumnDefinitions="Auto,Auto"
+                ColumnSpacing="10"
+                HorizontalOptions="Center"
+                RowDefinitions="67,67,67,67,67,67"
+                RowSpacing="0">
+
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="Target:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        MaxLength="1"
+                        Placeholder="Target"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.Target}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Row="5" Grid.Column="1">
+                    <Label
+                         Margin="0,0,0,3"
+                         FontAttributes="Bold"
+                         FontSize="13"
+                         Text="App Title:"
+                         TextColor="White" />
+
+                    <Entry
+                         BackgroundColor="White"
+                         MaxLength="50"
+                         Placeholder="App Title"
+                         PlaceholderColor="Black"
+                         Text="{Binding Settings.AppTitle}"
+                         TextColor="Black"
+                         WidthRequest="250" />      
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="0,13,0,0">
+
+                    <Button
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Text="STIM. RATES"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="Font Size:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="Font Size"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.FontSize}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="T1:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="T1"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.T1}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="Go Probability:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="Go Probability"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.GoProbability}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="3" Grid.Column="1">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="No-Go Probability:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="T2"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.NoProbability}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="T2:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="T2"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.T2}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="3" Grid.Column="0">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="T3:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="T3"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.T3}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="4" Grid.Column="1">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="Trials:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="Trials"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.Trials}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="4" Grid.Column="0">
+                    <Label
+                        Margin="0,0,0,3"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        Text="RND:"
+                        TextColor="White" />
+
+                    <Entry
+                        BackgroundColor="White"
+                        Keyboard="Numeric"
+                        MaxLength="5"
+                        Placeholder="RND"
+                        PlaceholderColor="Black"
+                        Text="{Binding Settings.RND}"
+                        TextColor="Black"
+                        WidthRequest="250" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="350,10,350,10"
+                Padding="5"
+                BackgroundColor="{StaticResource MainPageButtonsBackground}"
+                HorizontalOptions="CenterAndExpand"
+                Stroke="White"
+                StrokeShape="RoundRectangle 20,20">
+
+                <FlexLayout
+                    AlignContent="Center"
+                    AlignItems="Center"
+                    Direction="Row"
+                    JustifyContent="Center"
+                    Wrap="Wrap">
+
+                    <Button
+                        x:Name="btnAttentionDefaults"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5,10,0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Command="{Binding LoadDefaultsCommand}"
+                        ContentLayout="Right,25"
+                        FontAttributes="Bold"
+                        HeightRequest="30"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        Text="Attention Defaults"
+                        WidthRequest="180" />
+
+                    <Button
+                        x:Name="btnLoadSettings"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5,10,0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Command="{Binding LoadSettingsCommand}"
+                        ContentLayout="Right,25"
+                        FontAttributes="Bold"
+                        HeightRequest="30"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        Text="Load Settings"
+                        WidthRequest="180" />
+
+                    <Button
+                        x:Name="btnSaveSettings"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5,10,0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Command="{Binding SaveSettingsCommand}"
+                        ContentLayout="Right,25"
+                        FontAttributes="Bold"
+                        HeightRequest="30"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        Text="Save Settings"
+                        WidthRequest="180" />
+
+                    <Button
+                        x:Name="btnDefaultFolder"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5,10,0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Command="{Binding DefaultFolderCommand}"
+                        ContentLayout="Right,25"
+                        FontAttributes="Bold"
+                        HeightRequest="30"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        Text="Default Folder"
+                        WidthRequest="180" />
+
+                    <Button
+                        x:Name="btnExit"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5,10,0"
+                        BackgroundColor="{StaticResource DefaultButtonBackground}"
+                        Clicked="BtnExitClicked"
+                        ContentLayout="Right,25"
+                        FontAttributes="Bold"
+                        HeightRequest="30"
+                        ImageSource="{StaticResource DefaultButtonIconImage}"
+                        Text="Exit"
+                        WidthRequest="180" />
+                </FlexLayout>
+            </Border>
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                FontAttributes="Bold"
+                FontSize="11"
+                HorizontalOptions="Fill"
+                HorizontalTextAlignment="Center"
+                Text="{StaticResource FooterMessage}"
+                TextColor="White"
+                VerticalOptions="End" />
+        </StackLayout>
+    </Border>
+</ContentPage>

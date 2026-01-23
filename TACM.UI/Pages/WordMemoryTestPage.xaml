@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TACM.UI.Pages.WordMemoryTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TACM.UI.Pages"
+    xmlns:vm="clr-namespace:TACM.UI.ViewModels"
+    Padding="{StaticResource ContentPagePadding}"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundImageSource="{StaticResource BackgroundImage}">
+
+    <Border
+        Margin="0"
+        Padding="0"
+        BackgroundColor="{StaticResource DefaultTransparentBackGround}"
+        Stroke="{StaticResource DefaultBorderColor}"
+        StrokeShape="RoundRectangle 20,20">
+
+        <StackLayout
+            Padding="10"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand"
+            ZIndex="0">
+
+            <Label
+                Margin="20"
+                FontSize="Title"
+                Text="Verbal Memory"
+                TextColor="White" />
+
+            <Line
+                HeightRequest="25"
+                HorizontalOptions="Fill"
+                Stroke="White"
+                StrokeThickness="2"
+                X1="0"
+                X2="1500" />
+
+            <Grid
+                ColumnDefinitions="*"
+                RowDefinitions="330, 32, 50, 120, *"
+                RowSpacing="5"
+                VerticalOptions="FillAndExpand">
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="60,30,60,60"
+                    Padding="20"
+                    BackgroundColor="{DynamicResource MainPageButtonsBackground}"
+                    HorizontalOptions="Center"
+                    Stroke="White"
+                    StrokeShape="RoundRectangle 20,20"
+                    VerticalOptions="Center">
+
+                    <FlexLayout
+                        AlignItems="Center"
+                        HorizontalOptions="CenterAndExpand"
+                        JustifyContent="SpaceEvenly">
+
+                        <Button
+                            x:Name="btnWord1"
+                            Padding="25,25,25,25"
+                            BackgroundColor="{StaticResource Gray200}"
+                            Clicked="BtnAnswer_Clicked"
+                            Command="{Binding AnswerSelectedCommand}"
+                            CommandParameter="1"
+                            FontSize="{Binding FontSize}"
+                            HeightRequest="160"
+                            Text="{Binding CurrentAnswersPair.Answer1}"
+                            TextColor="Black"
+                            VerticalOptions="Center"
+                            WidthRequest="470" />
+
+                        <Button
+                            x:Name="btnWord2"
+                            Padding="25,25,25,25"
+                            BackgroundColor="{StaticResource Gray200}"
+                            Clicked="BtnAnswer_Clicked"
+                            Command="{Binding AnswerSelectedCommand}"
+                            CommandParameter="2"
+                            FontSize="{Binding FontSize}"
+                            HeightRequest="160"
+                            Text="{Binding CurrentAnswersPair.Answer2}"
+                            TextColor="Black"
+                            WidthRequest="470" />
+                    </FlexLayout>
+                </Border>
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="25"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding ShowCorrectAnswerLabel}"
+                    Text="CORRECT"
+                    TextColor="#7ff081"
+                    VerticalOptions="End" />
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="25"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding ShowIncorrectAnswerLabel}"
+                    Text="INCORRECT"
+                    TextColor="#eda79f"
+                    VerticalOptions="End" />
+
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    FontSize="25"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="End">
+
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Click on the word you were asked to remember, " TextColor="White" />
+                            <Span Text="then click NEXT" TextColor="White" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Button
+                    x:Name="btnNextWords"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource DefaultButtonBackground}"
+                    Clicked="BtnNextWords_Clicked"
+                    Command="{Binding NextAnswersPairCommand}"
+                    ContentLayout="Right,25"
+                    HeightRequest="50"
+                    ImageSource="{StaticResource DefaultButtonIconImage}"
+                    IsVisible="{Binding AnswerWasChosen}"
+                    Text="Next"
+                    WidthRequest="200" />
+
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="11"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
+                    Text="{StaticResource FooterMessage}"
+                    TextColor="White"
+                    VerticalOptions="End" />
+            </Grid>
+        </StackLayout>
+    </Border>
+</ContentPage>

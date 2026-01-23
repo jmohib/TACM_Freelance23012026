@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TACM.UI.Pages.AttentionTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TACM.UI.Pages"
+    Padding="{StaticResource ContentPagePadding}"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundImageSource="{StaticResource BackgroundImage}">
+
+    <Border
+        Margin="0"
+        Padding="0"
+        BackgroundColor="{StaticResource DefaultTransparentBackGround}"
+        Stroke="{StaticResource DefaultBorderColor}"
+        StrokeShape="RoundRectangle 20,20">
+
+        <StackLayout
+            Padding="10"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand"
+            ZIndex="0">
+
+            <Grid
+                ColumnDefinitions="*"
+                RowDefinitions="*, 50"
+                RowSpacing="5"
+                VerticalOptions="FillAndExpand">
+
+                <!--<Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="60,30,60,60"
+                    Padding="30"
+                    BackgroundColor="{StaticResource MainPageButtonsBackground}"
+                    HorizontalOptions="FillAndExpand"
+                    Stroke="White"
+                    StrokeShape="RoundRectangle 20,20"
+                    VerticalOptions="Center">-->
+
+                    <Label
+                        HeightRequest="350"
+                        Padding="25,25,25,25"
+                        HorizontalOptions="Fill"
+                        FontSize="{Binding FontSize}"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding CurrentLetter}"
+                        TextColor="{Binding LetterColor}"
+                        VerticalOptions="Center"
+                        VerticalTextAlignment="Center" />
+                <!--</Border>-->
+
+                <Button
+                    x:Name="btnNext"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource DefaultButtonBackground}"
+                    ContentLayout="Right,25"
+                    HeightRequest="50"
+                    ImageSource="{StaticResource DefaultButtonIconImage}"
+                    IsVisible="{Binding CanShowButtonNext}"
+                    Clicked="BtnNext_Clicked"
+                    Text="Next"
+                    WidthRequest="200" />
+            </Grid>
+        </StackLayout>
+    </Border>
+</ContentPage>

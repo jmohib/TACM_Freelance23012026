@@ -1,0 +1,86 @@
+name: Build MAUI Mac App
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 1️⃣ Fully remove ALL preinstalled SDKs
+    - name: Remove ALL preinstalled .NET
+      run: |
+        sudo rm -rf /usr/local/share/dotnet
+        sudo rm -rf /usr/local/bin/dotnet
+        sudo rm -rf ~/.dotnet
+        sudo rm -rf /usr/share/dotnet
+        echo "Dotnet after cleanup:"
+        dotnet --version || true
+
+     # 2️⃣ Install .NET 8 ONLY
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    # 3️⃣ Install MAUI workloads
+    - name: Install MAUI workloads
+      run: |
+        dotnet workload install maui
+        dotnet workload restore
+
+    # 3️⃣ Install required MAUI workloads
+    - name: Install MAUI Workloads
+      run: |
+        dotnet workload install maui
+        dotnet workload install android ios maccatalyst
+        dotnet workload restore
+
+    # 4️⃣ Publish Mac Catalyst  
+    # MtouchInterpreter and MtouchLink are set in TACM.UI.csproj for MacCatalyst
+    - name: Publish app
+      run: |
+        dotnet publish TACM.UI/TACM.UI.csproj \
+          -f net8.0-maccatalyst \
+          -c Release \
+          -p:RuntimeIdentifier=maccatalyst-arm64 \
+          --self-contained true
+
+    - name: List Published Files
+      run: |
+        echo "=== Publish Directory ==="
+        ls -al TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/publish/ || true
+        echo "=== App Bundle ==="
+        ls -al TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/TACM.UI.app/ || true
+        echo "=== Contents/Resources ==="
+        ls -al TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/TACM.UI.app/Contents/Resources/ || true
+        echo "=== Contents/MonoBundle ==="
+        ls -al TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/TACM.UI.app/Contents/MonoBundle/ || true
+
+    - name: Verify sharedsettings.json in bundle
+      run: |
+        echo "Checking for sharedsettings.json..."
+        find TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/TACM.UI.app -name "sharedsettings.json" -type f
+
+    # 5️⃣ Create a DMG
+    - name: Install create-dmg
+      run: npm install -g create-dmg
+
+    - name: Create DMG
+      run: |
+        mkdir -p dmg-root
+        cp -R "TACM.UI/bin/Release/net8.0-maccatalyst/maccatalyst-arm64/TACM.UI.app" dmg-root/
+        hdiutil create -volname "TACMInstaller" -srcfolder dmg-root -ov -format UDZO TACMInstaller.dmg
+
+    # 6️⃣ Upload the DMG
+    - name: Upload DMG as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TACMInstaller
+        path: TACMInstaller.dmg
