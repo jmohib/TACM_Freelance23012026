@@ -36,10 +36,43 @@ public partial class AttentionTestPage : ContentPage, IPageKeyEventHandler
             isDemo: _isDemo
         );
 
-        BindingContext = ViewModel;        
-    }    
+        BindingContext = ViewModel;
+        // --- Mac Implementation: Command + E ---
+#if MACCATALYST
+        SetupMacShortcut();
+#endif
+    }
 
+#if MACCATALYST
+    private void SetupMacShortcut()
+    {
+        var exitMenu = new MenuFlyoutItem
+        {
+            Text = "Exit Test",
+            Command = new Command(GoToMainPage)
+        };
 
+        // On Mac, Command+E is registered by adding to the KeyboardAccelerators collection
+        exitMenu.KeyboardAccelerators.Add(new KeyboardAccelerator
+        {
+            Modifiers = KeyboardAcceleratorModifiers.Cmd,
+            Key = "e"
+        });
+
+        var menuBarItem = new MenuBarItem { Text = "Debug" };
+        menuBarItem.Add(exitMenu);
+
+        this.MenuBarItems.Add(menuBarItem);
+    }
+#endif
+    // Helper to avoid code duplication for Windows/Mac navigation
+    private void GoToMainPage()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Application.Current.MainPage = new NavigationPage(new MainPage());
+        });
+    }
     private ushort GetInterval()
     {
         switch (ViewModel.CurrentTrialNumber)

@@ -11,35 +11,63 @@ namespace TACM.UI.Pages;
 public partial class WordMemoryTestPage : ContentPage
 {
     private Settings? _settings;
-    private bool _isDemo = false;	
-	private ushort _objectQuantityForReal;
+    private bool _isDemo = false;
+    private ushort _objectQuantityForReal;
     private readonly ushort _objectQuantity;
 
     private WordTestMemoryViewModel ViewModel { get; set; }
 
-
-	public WordMemoryTestPage(ushort objectQuantity, string[] correctAnswers)
-	{
-		InitializeComponent();
+    public WordMemoryTestPage(ushort objectQuantity, string[] correctAnswers)
+    {
+        InitializeComponent();
 
         _objectQuantity = objectQuantity;
 
         ViewModel = new WordTestMemoryViewModel(objectQuantity, correctAnswers);
-		BindingContext = ViewModel;
-	}
+        BindingContext = ViewModel;
 
+#if MACCATALYST
+        SetupMacShortcuts();
+#endif
+    }
+
+#if MACCATALYST
+    private void SetupMacShortcuts()
+    {
+        var exitMenu = new MenuFlyoutItem { Text = "Exit to Home" };
+        exitMenu.Command = new Command(NavigateToHome);
+        exitMenu.KeyboardAccelerators.Add(new KeyboardAccelerator 
+        { 
+            Modifiers = KeyboardAcceleratorModifiers.Cmd, 
+            Key = "e" 
+        });
+
+        var menuBarItem = new MenuBarItem { Text = "Actions" };
+        menuBarItem.Add(exitMenu);
+
+        this.MenuBarItems.Add(menuBarItem);
+    }
+#endif
+
+    private void NavigateToHome()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Application.Current.MainPage = new NavigationPage(new MainPage());
+        });
+    }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-		_settings = await ViewModel.GetActiveSettingsAsync();
+        _settings = await ViewModel.GetActiveSettingsAsync();
 
-		ViewModel.FontSize = _settings?.FontSize ?? AppConstants.DEFAULT_WORD_TEST_FONTSIZE;
-		_objectQuantityForReal = (_settings?.GetVerbalMemoryTestWordsQuantity(true) ?? ushort.MinValue);
+        ViewModel.FontSize = _settings?.FontSize ?? AppConstants.DEFAULT_WORD_TEST_FONTSIZE;
+        _objectQuantityForReal = (_settings?.GetVerbalMemoryTestWordsQuantity(true) ?? ushort.MinValue);
         _isDemo = _objectQuantity < _objectQuantityForReal;
 
-		await ViewModel.StartTestAsync(_isDemo);
+        await ViewModel.StartTestAsync(_isDemo);
 
 #if WINDOWS
         KeyboardHook.F10Pressed += OnF10Pressed;
@@ -56,56 +84,31 @@ public partial class WordMemoryTestPage : ContentPage
         KeyboardHook.Stop();
 #endif
     }
+
 #if WINDOWS
-    private void OnF10Pressed()
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Application.Current.MainPage = new NavigationPage(new MainPage());
-        });
-    }
+    private void OnF10Pressed() => NavigateToHome();
 #endif
 
     private void BtnAnswer_Clicked(object sender, EventArgs args)
-	{
-		var color = ViewModel.AnswerState switch
-		{
-			AnswerState.Correct => AppConstants.CORRECT_ANSWER_BG_COLOR,
-			AnswerState.Incorrect => AppConstants.WRONG_ANSWER_BG_COLOR,
-			_ => AppConstants.DEFAULT_ANSWER_BG_COLOR
-		};
-
-		var otherColor = ViewModel.AnswerState switch
-		{
-			AnswerState.Correct => AppConstants.WRONG_ANSWER_BG_COLOR,
-			AnswerState.Incorrect => AppConstants.CORRECT_ANSWER_BG_COLOR,
-			_ => AppConstants.DEFAULT_ANSWER_BG_COLOR
-		};
-
-		var button = ((Button)sender);
+    {
+        var button = ((Button)sender);
         var answerCode = Convert.ToByte(button.CommandParameter);
-        
-		switch(answerCode)
-		{
-			case 1:
-				btnWord1.FontAttributes = FontAttributes.Bold;
-               // btnWord1.BackgroundColor = Color.FromArgb(color);
 
-				btnWord2.FontAttributes = FontAttributes.None;
-                //btnWord2.BackgroundColor = Color.FromArgb(otherColor);
+        switch (answerCode)
+        {
+            case 1:
+                btnWord1.FontAttributes = FontAttributes.Bold;
+                btnWord2.FontAttributes = FontAttributes.None;
                 break;
 
-			case 2:
+            case 2:
                 btnWord1.FontAttributes = FontAttributes.None;
-               // btnWord1.BackgroundColor = Color.FromArgb(otherColor);
-
-				btnWord2.FontAttributes = FontAttributes.Bold;
-               // btnWord2.BackgroundColor = Color.FromArgb(color);
+                btnWord2.FontAttributes = FontAttributes.Bold;
                 break;
-		}
+        }
         btnWord1.IsEnabled = false;
         btnWord2.IsEnabled = false;
-	}
+    }
 
     private async void BtnNextWords_Clicked(object sender, EventArgs e)
     {
@@ -124,16 +127,6 @@ public partial class WordMemoryTestPage : ContentPage
             {
                 (SpanLine[] lines, string buttonText) = StartTestInitialTextsProvider.GetVerbalMemoryStartPageInfo(_objectQuantityForReal);
 
-                //await Navigation.PushAsync(
-                //    new TestIntroducingPage(
-                //        lines,
-                //        buttonText,
-                //        AppConstants.OBJECT_TYPE_WORDS_ON_PLURAL,
-                //        _objectQuantityForReal
-                //    ),
-
-                //    true
-                //);
                 Application.Current.MainPage = new NavigationPage(new TestIntroducingPage(
                         lines,
                         buttonText,
@@ -143,7 +136,6 @@ public partial class WordMemoryTestPage : ContentPage
             }
             else
             {
-               // await Navigation.PushAsync(new FinalTestMessagePage());
                 Application.Current.MainPage = new NavigationPage(new FinalTestMessagePage());
             }
         }

@@ -13,15 +13,88 @@ public partial class FinalTestMessagePage : ContentPage
     private Entities.Settings? _settings;
     private readonly MainPageViewModel ViewModel;
     private WordTestMemoryViewModel ViewModel1 { get; set; }
-    public  FinalTestMessagePage()
-	{
-		InitializeComponent();
+
+    public FinalTestMessagePage()
+    {
+        InitializeComponent();
         ViewModel = new MainPageViewModel();
         ViewModel1 = new WordTestMemoryViewModel(25, Array.Empty<string>());
-        GetCorrectAnswersCount();
+        _ = GetCorrectAnswersCount(); // Using discard for async call in constructor
 
-        
-	}
+#if MACCATALYST
+        SetupMacShortcuts();
+#endif
+    }
+
+#if MACCATALYST
+    private void SetupMacShortcuts()
+    {
+        // Cmd + E -> Exit to Home
+        var exitMenu = new MenuFlyoutItem { Text = "Exit to Home" };
+        exitMenu.Command = new Command(NavigateToHome);
+        exitMenu.KeyboardAccelerators.Add(new KeyboardAccelerator 
+        { 
+            Modifiers = KeyboardAcceleratorModifiers.Cmd, 
+            Key = "e" 
+        });
+
+        // Cmd + N -> Next/Introduce Test
+        var nextMenu = new MenuFlyoutItem { Text = "New Test" };
+        nextMenu.Command = new Command(NavigateToNextTest);
+        nextMenu.KeyboardAccelerators.Add(new KeyboardAccelerator 
+        { 
+            Modifiers = KeyboardAcceleratorModifiers.Cmd, 
+            Key = "n" 
+        });
+
+        var menuBarItem = new MenuBarItem { Text = "Actions" };
+        menuBarItem.Add(exitMenu);
+        menuBarItem.Add(nextMenu);
+
+        this.MenuBarItems.Add(menuBarItem);
+    }
+#endif
+
+    private void NavigateToHome()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Application.Current.MainPage = new NavigationPage(new MainPage());
+        });
+    }
+
+    private void NavigateToNextTest()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var quantityForReal = _settings?.GetVerbalMemoryTestWordsQuantity(true) ?? ushort.MinValue;
+            var objType = AppConstants.OBJECT_TYPE_WORDS_ON_PLURAL;
+            SpanLine[] lines = Array.Empty<SpanLine>();
+            string buttonText = string.Empty;
+
+            if (SessionTry.Get<bool>("isVerbal"))
+            {
+                objType = AppConstants.OBJECT_TYPE_WORDS_ON_PLURAL;
+                var result = StartTestInitialTextsProvider.GetVerbalMemoryStartPageInfo(quantityForReal);
+                lines = result.lines;
+                buttonText = result.buttonText;
+            }
+            else if (SessionTry.Get<bool>("isNonVerbal"))
+            {
+                objType = AppConstants.OBJECT_TYPE_PICTURES_ON_PLURAL;
+                var result = StartTestInitialTextsProvider.GetNonVerbalMemoryStartPageInfo(quantityForReal);
+                lines = result.lines;
+                buttonText = result.buttonText;
+            }
+
+            Application.Current.MainPage = new NavigationPage(new TestIntroducingPage(
+                lines,
+                buttonText,
+                objType,
+                quantityForReal
+            ));
+        });
+    }
 
     protected override async void OnAppearing()
     {
@@ -38,7 +111,6 @@ public partial class FinalTestMessagePage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-
 #if WINDOWS
         KeyboardHook.F10Pressed -= OnF10Pressed;
         KeyboardHook.F12Pressed -= OnF12Pressed;
@@ -47,90 +119,37 @@ public partial class FinalTestMessagePage : ContentPage
     }
 
 #if WINDOWS
-    private void OnF10Pressed()
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Application.Current.MainPage = new NavigationPage(new MainPage());
-        });
-    }
-
-    private void OnF12Pressed()
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-        var quantityForReal = _settings?.GetVerbalMemoryTestWordsQuantity(true) ?? ushort.MinValue;
-        var quantityForDemo = _settings?.GetVerbalMemoryTestWordsQuantity(false) ?? ushort.MinValue;
-        var objType = AppConstants.OBJECT_TYPE_WORDS_ON_PLURAL;
-        SpanLine[] lines = Array.Empty<SpanLine>();
-        string buttonText = string.Empty;
-        
-        if(SessionTry.Get<bool>("isVerbal"))
-        {
-            objType = AppConstants.OBJECT_TYPE_WORDS_ON_PLURAL;
-            var result = StartTestInitialTextsProvider.GetVerbalMemoryStartPageInfo(quantityForReal);
-
-            lines = result.lines;
-            buttonText = result.buttonText;
-        }
-        else if(SessionTry.Get<bool>("isNonVerbal"))
-        {
-            objType = AppConstants.OBJECT_TYPE_PICTURES_ON_PLURAL;
-            var result = StartTestInitialTextsProvider.GetNonVerbalMemoryStartPageInfo(quantityForReal);
-
-            lines = result.lines;
-            buttonText = result.buttonText;
-        }
-
-        Application.Current.MainPage = new NavigationPage(new TestIntroducingPage(
-                lines,
-                buttonText,
-                objType,
-                quantityForReal
-            ));
-            
-        });
-    }
+    private void OnF10Pressed() => NavigateToHome();
+    private void OnF12Pressed() => NavigateToNextTest();
 #endif
 
     private async Task GetCorrectAnswersCount()
     {
         int count = await ViewModel1.GetCorrectAnswerCount();
         int testAttempt = 0;
-        if (SessionTry.Get<string>("CurrentTestType") == "verbal")
+        string currentType = SessionTry.Get<string>("CurrentTestType");
+
+        if (currentType == "verbal")
         {
-            if (SessionTry.Get<bool>("isFirstVerbalCompleted"))
-            {
-                testAttempt = 1;
-            }
-            else if (SessionTry.Get<bool>("isSecondVerbalCompleted"))
-            {
-                testAttempt = 2;
-            }
+            if (SessionTry.Get<bool>("isFirstVerbalCompleted")) testAttempt = 1;
+            else if (SessionTry.Get<bool>("isSecondVerbalCompleted")) testAttempt = 2;
         }
-        else if (SessionTry.Get<string>("CurrentTestType") == "non-verbal")
+        else if (currentType == "non-verbal")
         {
-            if (SessionTry.Get<bool>("isFirstNonVerbalCompleted"))
-            {
-                testAttempt = 1;
-            }
-            else if (SessionTry.Get<bool>("isSecondNonVerbalCompleted"))
-            {
-                testAttempt = 2;
-            }
+            if (SessionTry.Get<bool>("isFirstNonVerbalCompleted")) testAttempt = 1;
+            else if (SessionTry.Get<bool>("isSecondNonVerbalCompleted")) testAttempt = 2;
         }
-        else if (SessionTry.Get<string>("CurrentTestType") == "attention")
+        else if (currentType == "attention")
         {
             testAttempt = 1;
             count = 8;
         }
 
-            sp_text.Text = "You are done. Please call the examiner. T" + testAttempt.ToString() + " : " + count.ToString();
+        sp_text.Text = $"You are done. Please call the examiner. T{testAttempt} : {count}";
     }
 
-    public async void BtnBackToHome_Clicked(object sender, EventArgs e)
-	{
-        //await Navigation.PushAsync(new MainPage());
-        ///Application.Current.MainPage = new NavigationPage(new MainPage());
+    public void BtnBackToHome_Clicked(object sender, EventArgs e)
+    {
+        NavigateToHome();
     }
 }

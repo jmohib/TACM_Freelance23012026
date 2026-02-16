@@ -23,8 +23,36 @@ public partial class PictureMemoryTestPage : ContentPage
 
         ViewModel = new PictureTestMemoryViewModel(objectQuantity, correctAnswers);
         BindingContext = ViewModel;
+#if MACCATALYST
+        SetupMacShortcuts();
+#endif
     }
+#if MACCATALYST
+    private void SetupMacShortcuts()
+    {
+        // Cmd + E -> Exit to Home
+        var exitMenu = new MenuFlyoutItem { Text = "Exit to Home" };
+        exitMenu.Command = new Command(NavigateToHome);
+        exitMenu.KeyboardAccelerators.Add(new KeyboardAccelerator 
+        { 
+            Modifiers = KeyboardAcceleratorModifiers.Cmd, 
+            Key = "e" 
+        });
 
+        var menuBarItem = new MenuBarItem { Text = "Actions" };
+        menuBarItem.Add(exitMenu);
+
+        this.MenuBarItems.Add(menuBarItem);
+    }
+#endif
+
+    private void NavigateToHome()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Application.Current.MainPage = new NavigationPage(new MainPage());
+        });
+    }
 
     protected override async void OnAppearing()
     {
@@ -41,7 +69,7 @@ public partial class PictureMemoryTestPage : ContentPage
             ViewModel.TestTryNumber = 0;
             SessionCollectedData.CollectNonVerbalTestAttemp(0);
         }
-        else if(!_isDemo && SessionCollectedData.GetCollectedNonVerbalTestAttempt() == 0)
+        else if (!_isDemo && SessionCollectedData.GetCollectedNonVerbalTestAttempt() == 0)
         {
             ViewModel.TestTryNumber = 1;
             SessionCollectedData.CollectNonVerbalTestAttemp(1);
@@ -51,14 +79,15 @@ public partial class PictureMemoryTestPage : ContentPage
             ViewModel.TestTryNumber = 2;
             SessionCollectedData.CollectNonVerbalTestAttemp(2);
         }
-            //ViewModel.TestTryNumber = _isDemo ? 0 : SessionCollectedData.GetCollectedNonVerbalTestAttempt(); // Or pass it into constructor
 
         await ViewModel.StartTestAsync(_isDemo);
+
 #if WINDOWS
         KeyboardHook.F10Pressed += OnF10Pressed;
         KeyboardHook.Start();
 #endif
     }
+
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
@@ -68,14 +97,9 @@ public partial class PictureMemoryTestPage : ContentPage
         KeyboardHook.Stop();
 #endif
     }
+
 #if WINDOWS
-    private void OnF10Pressed()
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Application.Current.MainPage = new NavigationPage(new MainPage());
-        });
-    }
+    private void OnF10Pressed() => NavigateToHome();
 #endif
 
     private void BtnAnswer_Clicked(object sender, EventArgs args)
